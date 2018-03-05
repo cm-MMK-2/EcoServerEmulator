@@ -1,0 +1,3 @@
+﻿{
+  "ConnectionString":"Server=xxx.xxx.xxx.xxx;UID=xxx;PWD=xxxxx;Database=eco;Min Pool Size=10;"
+}
