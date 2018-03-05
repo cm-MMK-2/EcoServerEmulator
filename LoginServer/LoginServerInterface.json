@@ -1,0 +1,40 @@
+﻿[
+  {
+    "ID": "0001",
+    "InterfaceName": "VersionCheck"
+  },
+  {
+    "ID": "000A",
+    "InterfaceName": "ConnectionCheck"
+  },
+  {
+    "ID": "001F",
+    "InterfaceName": "UserLogin"
+  },
+  {
+    "ID": "0034",
+    "InterfaceName": "RequestCharaID"
+  },
+
+  {
+    "ID": "00A0",
+    "InterfaceName": "CreateChara"
+  },
+  {
+    "ID": "00A7",
+    "InterfaceName": "RequestMapID"
+  },
+
+  {
+    "ID": "0032",
+    "InterfaceName": "RequestMapServer"
+  },
+
+  {
+    "ID": "002A",
+    "InterfaceName": "GetMailAndFriendList"
+  }
+
+
+
+]

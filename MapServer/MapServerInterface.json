@@ -1,0 +1,46 @@
+﻿[
+  {
+    "ID": "000A",
+    "InterfaceName": "ConnectionInit"
+  },
+
+  {
+    "ID": "0032",
+    "InterfaceName": "ConnectionCheck"
+  },
+
+  {
+    "ID": "0010",
+    "InterfaceName": "UserLogin"
+  },
+
+  {
+    "ID": "01FD",
+    "InterfaceName": "SelectMap"
+  },
+
+  {
+    "ID": "13C7",
+    "InterfaceName": "FinishMapMove"
+  },
+
+  {
+    "ID": "0FA5",
+    "InterfaceName": "AttackModeChange"
+  },
+
+  {
+    "ID": "11FE",
+    "InterfaceName": "RequestMove"
+  },
+
+  {
+    "ID": "11F8",
+    "InterfaceName": "CharaMove"
+  },
+
+  {
+    "ID": "121B",
+    "InterfaceName": "MotionChange"
+  }
+]
