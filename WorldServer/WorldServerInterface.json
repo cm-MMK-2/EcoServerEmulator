@@ -1,0 +1,26 @@
+﻿[
+  {
+    "ID": "0001",
+    "InterfaceName": "VersionCheck"
+  },
+
+  {
+    "ID": "000A",
+    "InterfaceName": "ConnectionCheck"
+  },
+
+  {
+    "ID": "001F",
+    "InterfaceName": "UserLogin"
+  },
+
+  {
+    "ID": "002F",
+    "InterfaceName": "LoginStatusCheck"
+  },
+
+  {
+    "ID": "0031",
+    "InterfaceName": "RequestServerList"
+  }
+]
