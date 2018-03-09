@@ -1,6 +1,10 @@
 # [EcoServerEmulator](https://github.com/cm-MMK-2/EcoServerEmulator)  
 <br />
 
+Only for study purpose
+
+<br />
+
 # For the Memories of Emil Chronicle Online
 <br />
 
@@ -9,7 +13,7 @@
   - To build a clean and extensible ECO server.
 <br />
 
-## Current Status: Able to Login, Move
+## Current Available:Create Character, Login, Move
 
   ![Pre](https://github.com/cm-MMK-2/EcoServerEmulator/blob/master/preview/progress.png)
 <br />
