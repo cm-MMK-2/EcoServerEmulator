@@ -2,6 +2,7 @@
 using CommonLib.Data;
 using CommonLib.Packets;
 using CommonLib.Socket;
+using LoginServer.Data;
 using LoginServer.Packets;
 using System;
 using System.Collections.Generic;
@@ -121,6 +122,7 @@ namespace LoginServer
                     //select chara data from db
                     List<SingleCharaSelectionInfoExt> lscsiws = await DatabaseManager.SelectMultiAsync<SingleCharaSelectionInfoExt>("account_id", session.AccountID.ToString(), "Chara");
 
+
                     foreach (var scsiws in lscsiws)
                     {
                         sci.AddChara(scsiws, scsiws.Slot);
@@ -157,7 +159,6 @@ namespace LoginServer
         public void RequestCharaID(EcoSession session, BasePacket packet)
         {
             Logger.Debug($"Received CharaID Request :{packet.Data.ToHexString()}");
-
         }
 
 
@@ -225,7 +226,7 @@ namespace LoginServer
             charaInsertDict.Add("HairStyle", cci.hair);
             charaInsertDict.Add("HairColor", cci.hair_color);
             charaInsertDict.Add("Face", cci.face);
-            charaInsertDict.Add("Map", 10999000); //start map
+            charaInsertDict.Add("Map", 20013003); //start map
 
             if (await DatabaseManager.InsertAsync("Chara", charaInsertDict) <= 0)
             {
@@ -281,6 +282,34 @@ namespace LoginServer
             }
 
             #endregion
+
+            #region Insert Default CharaData
+            Dictionary<string, object> charaDataInsertDict = new Dictionary<string, object>();
+            StatusExt initialStatus = BaseStatus.GetInitialStatus((Race)cci.race) as StatusExt;
+            charaDataInsertDict.Add("id", chara_id);
+            charaDataInsertDict.Add("HP", initialStatus.MaxHp);
+            charaDataInsertDict.Add("Mp", initialStatus.MaxMp);
+            charaDataInsertDict.Add("Sp", initialStatus.MaxSp);
+            charaDataInsertDict.Add("Ep", initialStatus.MaxEp);
+            charaDataInsertDict.Add("Str", initialStatus.Str);
+            charaDataInsertDict.Add("Dex", initialStatus.Dex);
+            charaDataInsertDict.Add("Int", initialStatus.Int);
+            charaDataInsertDict.Add("Vit", initialStatus.Vit);
+            charaDataInsertDict.Add("Agi", initialStatus.Agi);
+            charaDataInsertDict.Add("Mag", initialStatus.Mag);
+            charaDataInsertDict.Add("Luk", 0);
+            charaDataInsertDict.Add("Cha", 0);
+            charaDataInsertDict.Add("Mov", 10);
+            charaDataInsertDict.Add("Gold", 0);
+            charaDataInsertDict.Add("HyouiTarget", 0);
+            charaDataInsertDict.Add("HyouiPart", 0);
+            //initial status points
+            if (await DatabaseManager.InsertAsync("CharaData", charaDataInsertDict) <= 0)
+            {
+                //error
+                Logger.Error("Insert CharaData failed.");
+            }
+            #endregion
             #endregion
 
             //send success message
@@ -308,12 +337,16 @@ namespace LoginServer
         /// <param name="session"></param>
         /// <param name="packet"></param>
         /// <returns></returns>
-        public void RequestMapServer(EcoSession session, BasePacket packet)
+        public async void RequestMapServer(EcoSession session, BasePacket packet)
         {
             Logger.Debug($"Received MapServer Request :{packet.Data.ToHexString()}");
             uint map_id = packet.Data.ToUInt32();
-            //todo: fetch database
-            session.Send(new MapServerResult(1, "127.0.0.1",17833).ToPacket());
+            //todo: setup map server for different maps
+            //here is only one map server for test
+            MapServerResult ms = await DatabaseManager.SelectAsync<MapServerResult>($"SELECT address AS ServerAddr, port AS ServerPort FROM MapServer WHERE id=1");
+            ms.Result = 1;
+
+            session.Send(ms.ToPacket());
         }
 
         
@@ -331,6 +364,10 @@ namespace LoginServer
             session.Send(new BasePacket(0x002b));
 
             //todo: send mail and friend list
+            var friendList = new SelfFriendListInfo();
+            friendList.State = 0;
+            friendList.Comment = "comment";
+            session.Send(friendList.ToPacket());
         }
 
     }

@@ -166,5 +166,33 @@ namespace CommonLib
             TimeSpan diff = date.ToUniversalTime() - origin;
             return (uint)Math.Floor(diff.TotalSeconds);
         }
+
+        public static int Pow(this int num, uint power)
+        {
+            if(power == 0)
+            {
+                return 1;
+            }
+            int res = num;
+            while(--power > 0)
+            {
+                res *= num;
+            }
+            return res;
+        }
+
+        public static uint Pow(this uint num, uint power)
+        {
+            if (power == 0)
+            {
+                return 1;
+            }
+            uint res = num;
+            while (--power > 0)
+            {
+                res *= num;
+            }
+            return res;
+        }
     }
 }

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32630.192
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldServer", "WorldServer\WorldServer.csproj", "{94294FC2-168A-4AD0-8D39-EC6F56E3F410}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLib", "CommonLib\CommonLib.csproj", "{C3A5F261-C88B-4294-9384-ABBDBF8F2C03}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EcoCryptoLib", "EcoCryptoLib\EcoCryptoLib.vcxproj", "{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginServer", "LoginServer\LoginServer.csproj", "{3158F090-0F67-4F51-BC6E-E6071A783C0C}"
 EndProject
@@ -45,6 +47,16 @@ Global
 		{C3A5F261-C88B-4294-9384-ABBDBF8F2C03}.Release|x64.Build.0 = Release|Any CPU
 		{C3A5F261-C88B-4294-9384-ABBDBF8F2C03}.Release|x86.ActiveCfg = Release|Any CPU
 		{C3A5F261-C88B-4294-9384-ABBDBF8F2C03}.Release|x86.Build.0 = Release|Any CPU
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Debug|x64.ActiveCfg = Debug|x64
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Debug|x64.Build.0 = Debug|x64
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Debug|x86.ActiveCfg = Debug|Win32
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Debug|x86.Build.0 = Debug|Win32
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Release|Any CPU.ActiveCfg = Release|Win32
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Release|x64.ActiveCfg = Release|x64
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Release|x64.Build.0 = Release|x64
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Release|x86.ActiveCfg = Release|Win32
+		{6D16CE82-F9ED-46D0-AB1E-B62C65F99B2E}.Release|x86.Build.0 = Release|Win32
 		{3158F090-0F67-4F51-BC6E-E6071A783C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3158F090-0F67-4F51-BC6E-E6071A783C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3158F090-0F67-4F51-BC6E-E6071A783C0C}.Debug|x64.ActiveCfg = Debug|Any CPU

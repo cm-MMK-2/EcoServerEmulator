@@ -248,7 +248,7 @@ namespace CommonLib.Packets
                 }
                 else
                 {
-                    Logger.Error($"Unknow type for packet:{protocolID.ToString("x")}, type:{type.Name}");
+                    Logger.Error($"Unknown type for packet:{protocolID.ToString("x")}, type:{type.Name}");
                 }
             }
 

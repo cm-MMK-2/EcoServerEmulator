@@ -14,6 +14,11 @@ namespace LoginServer.Packets
         public string ServerAddr { get; set; }
         public uint ServerPort { get; set; }
 
+        public MapServerResult()
+        {
+
+        }
+
         public MapServerResult(byte _result, string _serveraddr, uint _port)
         {
             Result = _result;

@@ -2,13 +2,11 @@
 using CommonLib.Data;
 using CommonLib.Packets;
 using CommonLib.Socket;
+using MapServer.Map;
 using MapServer.Packets;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 
 namespace MapServer
 {
@@ -16,6 +14,8 @@ namespace MapServer
     {
         RNGCryptoServiceProvider rng;
         private readonly byte[] firstAck;
+
+        MapCollection mapCollection = new MapCollection();
 
         public MapServerProtocol()
         {
@@ -122,26 +122,32 @@ namespace MapServer
         /// <param name="session"></param>
         /// <param name="packet"></param>
         /// <returns></returns>
-        public async void SelectMap(EcoSession session, BasePacket packet)
+        public async void ChangeMap(EcoSession session, BasePacket packet)
         {
-            Logger.Debug($"Received SelectChara Request :{packet.Data.ToHexString()}");
-            SelectMapRequestInfo scri = new SelectMapRequestInfo(packet.Data);
+            Logger.Debug($"Received ChangeMap Request :{packet.Data.ToHexString()}");
+            SelectCharaRequestInfo scri = new SelectCharaRequestInfo(packet.Data);
             if (scri.MapMove == 0) //login
             {
-
                 //session.CharaID = await DatabaseManager.SelectAsync($@"SELECT id FROM Chara WHERE account_id = {session.AccountID} AND Slot = {scri.SelectedSlot}");
                 CharaInfo info = await DatabaseManager.SelectAsync<CharaInfo>(
-                    $@"SELECT Chara.Id AS CharaID, Name, Race, Form, Race, Form, Sex, HairStyle, HairColor, Wig, IsEmptySlot, Face, RebirthLv, Ex, Wing, WingColor, Map, X, Y, Dir, Hp, Mp, Sp,Ep, MaxHp, MaxMp, MaxSp, MaxEp, Gold FROM Chara LEFT JOIN CharaData ON Chara.id = CharaData.id WHERE Chara.account_id = {session.AccountID} AND Slot = {scri.SelectedSlot}"
+                    $@"SELECT Chara.Id AS CharaID, Name, Race, Form, Sex, HairStyle, HairColor, Wig, IsEmptySlot, Face, RebirthLv, Ex, Wing, WingColor, Map, X, Y, Dir, Hp, Mp, Sp,Ep, MaxHp, MaxMp, MaxSp, MaxEp, Gold FROM Chara LEFT JOIN CharaData ON Chara.id = CharaData.id WHERE Chara.account_id = {session.AccountID} AND Slot = {scri.SelectedSlot}"
                 );
 
-                CharaEquipment equip = await DatabaseManager.SelectAsync<CharaEquipment>(info.CharaID, "Equip");
+                session.CharaID = info.CharaID;
+                if(session.CharaID == 0)
+                {
+                    //error
+                    Logger.Error("Character selection error: no target character");
+                    return;
+                }
 
+                CharaEquipment equip = await DatabaseManager.SelectAsync<CharaEquipment>(info.CharaID, "Equip");
                 info.Equipments = equip.ToArray();
 
-                session.CharaID = info.CharaID;
+
                 ShowTinyIcon(session, info.ShowTinyIcon == 1);
                 EverydayDungeonNotification(session, info.DailyDungeonCleared == 1);
-                MoveSpeedChange(session, session.CharaID, 0x0A); //lock chara move
+                MoveSpeedChange(session, session.CharaID, 0x000A); //lock chara move
                 CharaModeChange(session, session.CharaID, 2, 0);
                 RightClickSettings(session, RightClickSettingsEnum.ALLOW_ALL); //todo: save user settings
 
@@ -155,6 +161,10 @@ namespace MapServer
                 UpdateElements(session);
                 UpdateCharaCapaAndPayl(session);
                 //=====
+
+                session.Send(new ChangeMapFinish(session.CharaID).ToPacket());
+
+                //await mapCollection.CharaEnterMap(info.Map, info);
             }
             else //move between map servers
             {
@@ -200,7 +210,7 @@ namespace MapServer
         /// <param name="packet"></param>
         public void CharaMove(EcoSession session, BasePacket packet)
         {
-
+            Logger.Debug($"Received CharaMove Request :{packet.Data.ToHexString()}");
         }
 
         /// <summary>
@@ -222,9 +232,9 @@ namespace MapServer
         public async void RequestMove(EcoSession session, BasePacket packet)
         {
             ushort mov = await DatabaseManager.SelectAsyncUshort(
-                $@"SELECT Mov FROM CharaData WHERE id = {session.CharaID}" 
+                $@"SELECT Mov FROM CharaData WHERE id = {session.CharaID}"
             );
-            MoveSpeedChange(session, session.CharaID, mov);
+            MoveSpeedChange(session, session.CharaID, 1);
         }
 
 
@@ -389,7 +399,10 @@ namespace MapServer
         /// <param name="speed"></param>
         private void MoveSpeedChange(EcoSession session,uint chara_id, ushort speed)
         {
-            session.Send(new BasePacket(0x1239, chara_id.ToBytes().Concat(speed.ToBytes()).ToArray()));
+            byte[] data = new byte[6];
+            data.Fill(chara_id.ToBytes(), 0);
+            data.Fill(speed.ToBytes(), 4);
+            session.Send(new BasePacket(0x1239, data));
         }
 
         /// <summary>
@@ -414,8 +427,8 @@ namespace MapServer
         {
             byte[] data = new byte[12];
             data.Fill(chara_id.ToBytes(), 0);
-            data.Fill(mode1.ToBytes(), 0);
-            data.Fill(mode2.ToBytes(), 0);
+            data.Fill(mode1.ToBytes(), 4);
+            data.Fill(mode2.ToBytes(), 8);
             session.Send(new BasePacket(0x0fa7, data));
         }
 

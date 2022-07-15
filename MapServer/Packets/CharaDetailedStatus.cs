@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace MapServer.Packets
 {
     public class CharaDetailedStatus1 : ISendPacket
@@ -16,45 +15,44 @@ namespace MapServer.Packets
 
         public BasePacket ToPacket()
         {
-            byte[] data = new byte[53];
-            return new BasePacket(0x0212, data);
+            return BasePacket.MakeUniversalPacket(this, 0x0212);
         }
     }
 
     public class CharaDetailedStatus2 : ISendPacket
     {
-        byte StatusCount { get; set; } = 0x13;
-        ushort Speed { get; set; } = 410; //速度 410（旧380
+        public byte StatusCount { get; set; } = 0x13;
+        public ushort Speed { get; set; } = 410; //速度 410（旧380
 
-        ushort MinAtkN; //最小ATK1
-        ushort MinAtkS; //最小ATK2
-        ushort MinAtkT; //最小ATK3
-        ushort MaxAtkN; //最大ATK1
-        ushort MaxAtkS; //最大ATK2
-        ushort MaxAtkT; //最大ATK3
+        public ushort MinAtkN { get; set; } //最小ATK1
+        public ushort MinAtkS { get; set; } //最小ATK2
+        public ushort MinAtkT { get; set; } //最小ATK3
+        public ushort MaxAtkN { get; set; } //最大ATK1
+        public ushort MaxAtkS { get; set; } //最大ATK2
+        public ushort MaxAtkT { get; set; } //最大ATK3
 
-        ushort MinMatk; //最小M.ATK
-        ushort MaxMatk; //最大M.ATK
+        public ushort MinMatk { get; set; } //最小M.ATK
+        public ushort MaxMatk { get; set; } //最大M.ATK
 
-        ushort BaseDef; //基本DEF
-        ushort ExtDef;  //追加DEF
-        ushort BaseMdef;//基本M.DEF
-        ushort ExtMdef; //追加M.DEF
+        public ushort BaseDef { get; set; } //基本DEF
+        public ushort ExtDef { get; set; } //追加DEF
+        public ushort BaseMdef { get; set; }//基本M.DEF
+        public ushort ExtMdef { get; set; } //追加M.DEF
 
-        ushort SHit; //S.HIT(近距離命中率)
-        ushort LHit; //L.HIT(遠距離命中率)
+        public ushort SHit { get; set; }//S.HIT(近距離命中率)
+        public ushort LHit { get; set; }//L.HIT(遠距離命中率)
 
-        ushort SAvoid; //S.AVOID(近距離回避力)
-        ushort LAvoid; //L.AVOID(遠距離回避力)
+        public ushort SAvoid { get; set; }//S.AVOID(近距離回避力)
+        public ushort LAvoid { get; set; } //L.AVOID(遠距離回避力)
 
-        ushort ASpd; //A.SPD(攻撃速度)
-        ushort CSpd; //C.SPD(詠唱速度)
+        public ushort ASpd { get; set; } //A.SPD(攻撃速度)
+        public ushort CSpd { get; set; }//C.SPD(詠唱速度)
 
         public BasePacket ToPacket()
         {
-            byte[] data = new byte[39];
-            return new BasePacket(0x0217, data);
+            return BasePacket.MakeUniversalPacket(this, 0x0217);
         }
+
     }
 
     public class CharaCapaAndPayl : ISendPacket
@@ -72,7 +70,7 @@ namespace MapServer.Packets
             data.Fill(Payl.ToBytes(), 4);
             data.Fill(MaxCapa.ToBytes(), 8);
             data.Fill(MaxPayl.ToBytes(), 12);
-            return new BasePacket(0230, data);
+            return new BasePacket(0x0230, data);
         }
     }
 

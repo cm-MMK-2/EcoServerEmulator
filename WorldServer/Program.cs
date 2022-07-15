@@ -2,10 +2,6 @@
 using CommonLib.Packets;
 using CommonLib.Socket;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WorldServer
 {
@@ -35,7 +31,7 @@ namespace WorldServer
             worldServerInstance = new WorldServerProtocol();
             var serverApp = new EcoServerApp(17831, EcoServer_NewRequestReceived);
             serverApp.Start();
-            Console.ReadLine();
+            while (Console.ReadKey().Key != ConsoleKey.Escape) { }
         }
     }
 }

@@ -1,11 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MySqlConnector;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CommonLib
@@ -81,6 +79,27 @@ namespace CommonLib
             });
         }
 
+        public static async Task<int> InsertAsync<T>(T obj, string tableName = null) where T : class
+        {
+            return await RunAsync(async (db) =>
+            {
+                if(tableName == null)
+                {
+                    tableName = typeof(T).Name;
+                }
+                var cmd = db.CreateCommand() as MySqlCommand;
+                var properties = typeof(T).GetProperties();
+                
+                cmd.CommandText = $@"INSERT INTO `{tableName}` ({string.Join(", ", properties.Select(p => $"`{p.Name}`"))}) VALUES ({string.Join(", ", properties.Select(p => $"@{p.Name}"))})";
+                foreach (var prop in properties)
+                {
+                    cmd.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(obj));
+                }
+
+                return await cmd.ExecuteNonQueryAsync();
+            });
+        }
+
         public static async Task<int> InsertAsync(string tableName, Dictionary<string, object> parameters)
         {
             return await RunAsync(async (db) =>
@@ -149,7 +168,7 @@ namespace CommonLib
                         tableName = type.Name;
                     }
                     cmd.CommandText = $@"SELECT {string.Join(",", properties.Select(p => $"`{p.Name}`"))} FROM `{tableName}` WHERE `{columName}` = {columStr}";
-                    //var result = await 
+
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         if (await reader.ReadAsync())
@@ -189,7 +208,7 @@ namespace CommonLib
                 {
                     var cmd = db.CreateCommand() as MySqlCommand;
                     cmd.CommandText = command;
-                    //var result = await 
+
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         if (await reader.ReadAsync())
@@ -275,7 +294,7 @@ namespace CommonLib
                     tableName = type.Name;
                 }
                 cmd.CommandText = $@"SELECT {string.Join(",", properties.Select(p => $"`{p.Name}`"))} FROM {tableName} WHERE `id` = {id}";
-                //var result = await 
+
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     await reader.ReadAsync();
@@ -306,12 +325,12 @@ namespace CommonLib
                 {
                     var cmd = db.CreateCommand() as MySqlCommand;
                     cmd.CommandText = $@"SELECT COUNT({countColumName??"*"}) AS COUNT FROM {tableName} WHERE `{columName}` = {columStr}";
-                    //var result = await 
+
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         await reader.ReadAsync();
 
-                        return (uint)(Int64)reader[0];
+                        return (uint)reader[0];
                     }
                 }
                 catch (Exception e)
@@ -330,12 +349,12 @@ namespace CommonLib
                 {
                     var cmd = db.CreateCommand() as MySqlCommand;
                     cmd.CommandText = command;
-                    //var result = await 
+
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         await reader.ReadAsync();
 
-                        return (uint)(Int64)reader[0];
+                        return (uint)reader[0];
                     }
                 }
                 catch (Exception e)
@@ -361,7 +380,7 @@ namespace CommonLib
                         tableName = type.Name;
                     }
                     cmd.CommandText = $@"SELECT {string.Join(",", properties.Select(p => $"`{p.Name}`"))} FROM {tableName} WHERE `{columName}` = {columStr}";
-                    //var result = await 
+
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -404,7 +423,7 @@ namespace CommonLib
                 {
                     var cmd = db.CreateCommand() as MySqlCommand;
                     cmd.CommandText = command;
-                    //var result = await 
+
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())

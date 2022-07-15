@@ -29,7 +29,7 @@ namespace LoginServer
             loginServerInstance = new LoginServerProtocol();
             var serverApp = new EcoServerApp(17832, EcoServer_NewRequestReceived);
             serverApp.Start();
-            Console.ReadLine();
+            while (Console.ReadKey().Key != ConsoleKey.Escape) { }
         }
     }
 }

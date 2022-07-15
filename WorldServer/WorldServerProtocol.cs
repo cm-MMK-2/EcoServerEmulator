@@ -147,7 +147,7 @@ namespace WorldServer
         /// <returns></returns>
         public async void RequestServerList(EcoSession session, BasePacket packet)
         {
-            session.Send(new BasePacket(0x0032));
+            session.Send(new BasePacket(0x0032, ((uint)1).ToBytes()));
 
             List<ServerInfo> serverList = await DatabaseManager.SelectMultiAsync<ServerInfo>("SELECT Id, Name, Address, Port, Status FROM LoginServer");
 

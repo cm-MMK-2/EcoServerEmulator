@@ -3,6 +3,7 @@ using SuperSocket.SocketBase;
 using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase.Protocol;
 using System;
+using System.Collections.Generic;
 
 namespace CommonLib.Socket
 {
@@ -109,9 +110,11 @@ namespace CommonLib.Socket
 
         public uint CharaID { get; set; }
 
+        public List<EcoSession> AllSessions { get; set; }
+
         protected override void OnSessionStarted()
         {
-            CommonLib.Logger.Debug($"user: {this.LocalEndPoint.Address.ToString()} connected");
+            CommonLib.Logger.Debug($"user: {this.LocalEndPoint.Address} connected");
             Crypt = new Encryption();
             //this.Send("Welcome to Eco Server");
         }
@@ -129,14 +132,15 @@ namespace CommonLib.Socket
         protected override void OnSessionClosed(CloseReason reason)
         {
             //add you logics which will be executed after the session is closed
-            CommonLib.Logger.Debug($"user: {this.LocalEndPoint.Address.ToString()} disconnected");
+            CommonLib.Logger.Debug($"user: {this.LocalEndPoint.Address} disconnected");
+            AllSessions?.Remove(this);
             base.OnSessionClosed(reason);
         }
 
         public void Send(byte[] data)
         {
             var enBytes = Crypt.Encrypt(data);
-            CommonLib.Logger.Debug($"Send Data: {data.ToHexString()}\nEncrypted As:{enBytes.ToHexString()}\nto User: {this.LocalEndPoint.Address.ToString()}(Session:{this.SessionID})");
+            CommonLib.Logger.Debug($"Send Data: {data.ToHexString()}\nEncrypted As:{enBytes.ToHexString()}\nto User: {this.LocalEndPoint.Address}(Session:{this.SessionID})");
             base.Send(enBytes, 0, enBytes.Length);
         }
 
