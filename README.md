@@ -26,5 +26,6 @@
 ### Steps for using the client
   1. Modify the address and port in server.lst file to make it the same as your server settings. 
   2. Start "eco.exe" with arguements `/launch -u:<username> -p:<password>`. (You can find an example in "start_eco.bat" batch file)
+  3. Edit database and make sure the "account table" has your login account as added in step 2.
 
 
